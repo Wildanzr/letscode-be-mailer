@@ -33,6 +33,7 @@ class Consumer {
         // Parse the message then destructuring the data
         const payload = await JSON.parse(data.content.toString())
         const { message, subject, template } = payload
+        // console.log(payload)
 
         // Send email to the user
         await this._mailService.sendEmail(message, subject, template)
