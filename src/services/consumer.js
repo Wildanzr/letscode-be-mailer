@@ -2,10 +2,13 @@ const amqp = require('amqplib')
 const { ClientError } = require('../errors')
 
 class Consumer {
-  constructor () {
+  constructor (mailService) {
     this.name = 'consumer'
+    this._mailService = mailService
     this._connection = null
     this._channel = null
+
+    this.consumeMessage = this.consumeMessage.bind(this)
   }
 
   async consumeMessage () {
@@ -26,12 +29,15 @@ class Consumer {
       // Consume message from the mail queue
       this._channel.consume('mail', async (data) => {
         console.log('receive new message')
-        const payload = JSON.parse(data.content.toString())
 
-        await this.output(payload)
+        // Parse the message then destructuring the data
+        const payload = await JSON.parse(data.content.toString())
+        const { message, subject, template } = payload
+
+        // Send email to the user
+        await this._mailService.sendEmail(message, subject, template)
 
         this._channel.ack(data)
-        console.log('message ack')
       })
     } catch (error) {
       console.log(error)

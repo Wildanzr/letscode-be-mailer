@@ -1,11 +1,13 @@
 // Config environment
 require('dotenv').config()
 
-// Consumer Service
-const { Consumer } = require('./services/consumer')
+// Mail Service
+const { MailService } = require('./mails')
+const mailService = new MailService()
 
-// Create a new instance of the Consumer class
-const consumer = new Consumer()
+// Consumer
+const { Consumer } = require('./services/consumer')
+const consumer = new Consumer(mailService)
 
 // Start the consumer
 consumer.consumeMessage()
