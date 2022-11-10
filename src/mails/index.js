@@ -12,13 +12,14 @@ class MailService {
     this.transporter = this.transporter.bind(this)
     this.sendEmail = this.sendEmail.bind(this)
 
-    // console.log(process.env.OAUTH_CLIENT_ID,
+    // console.log(
+    // process.env.OAUTH_CLIENT_ID,
+    // process.env.OAUTH_REFRESH_TOKEN
     //   process.env.OAUTH_CLIENT_SECRET,
     //   process.env.OAUTH_REFRESH_TOKEN,
     //   process.env.OAUTH_EMAIL,
     //   process.env.OAUTH_CLIENT_ID,
     //   process.env.OAUTH_CLIENT_SECRET,
-    //   process.env.OAUTH_REFRESH_TOKEN
     // )
   }
 
@@ -35,19 +36,29 @@ class MailService {
       refresh_token: process.env.OAUTH_REFRESH_TOKEN
     })
 
-    // Request Access Token
-    const accessToken = await new Promise((resolve, reject) => {
-      oauth2Client.getAccessToken((err, token) => {
-        if (err) {
-          reject('Failed to create access token')
-        }
-        resolve(token)
-      })
-    })
+    const accessToken = oauth2Client.getAccessToken()
+
+    // // Request Access Token
+    // const accessToken = await new Promise((resolve, reject) => {
+    //   try {
+    //     oauth2Client.getAccessToken((err, token) => {
+    //       if (err) {
+    //         throw err
+    //       }
+    //       resolve(token)
+    //     })
+    //   } catch (error) {
+    //     console.log(error)
+    //     reject(error)
+    //   }
+    // })
 
     // Create Transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
+      tls: {
+        rejectUnauthorized: false
+      },
       auth: {
         type: 'OAuth2',
         user: process.env.OAUTH_EMAIL,
