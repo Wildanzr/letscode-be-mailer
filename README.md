@@ -1,1 +1,1 @@
-# letscode-be-mailer
+# LetsCode Mailer
