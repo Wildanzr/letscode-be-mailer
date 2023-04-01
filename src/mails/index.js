@@ -89,19 +89,15 @@ class MailService {
 
     // Declare options
     const mailOptions = {
-      from: process.env.USER_EMAIL,
+      from: process.env.OAUTH_EMAIL,
       to: email,
       subject,
+      text: 'LetsCode',
       template,
       context: {
         name,
         link
-      },
-      attachments: [{
-        filename: 'wave.png',
-        path: path.join(__dirname, './images/wave.png'),
-        cid: 'wave'
-      }]
+      }
     }
 
     const emailTransporter = await this.transporter()
@@ -112,7 +108,7 @@ class MailService {
         console.log(err)
         return false
       } else {
-        console.log('Email Sent')
+        console.log(res)
       }
     })
     return true
