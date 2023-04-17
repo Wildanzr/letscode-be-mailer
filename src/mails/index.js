@@ -3,6 +3,7 @@ const path = require('path')
 const nodemailer = require('nodemailer')
 const hbs = require('nodemailer-express-handlebars')
 const { google } = require('googleapis')
+const { logger } = require('../utils/logger')
 const OAuth2 = google.auth.OAuth2
 
 class MailService {
@@ -11,16 +12,6 @@ class MailService {
 
     this.transporter = this.transporter.bind(this)
     this.sendEmail = this.sendEmail.bind(this)
-
-    // console.log(
-    // process.env.OAUTH_CLIENT_ID,
-    // process.env.OAUTH_REFRESH_TOKEN
-    //   process.env.OAUTH_CLIENT_SECRET,
-    //   process.env.OAUTH_REFRESH_TOKEN,
-    //   process.env.OAUTH_EMAIL,
-    //   process.env.OAUTH_CLIENT_ID,
-    //   process.env.OAUTH_CLIENT_SECRET,
-    // )
   }
 
   async transporter () {
@@ -37,21 +28,6 @@ class MailService {
     })
 
     const accessToken = oauth2Client.getAccessToken()
-
-    // // Request Access Token
-    // const accessToken = await new Promise((resolve, reject) => {
-    //   try {
-    //     oauth2Client.getAccessToken((err, token) => {
-    //       if (err) {
-    //         throw err
-    //       }
-    //       resolve(token)
-    //     })
-    //   } catch (error) {
-    //     console.log(error)
-    //     reject(error)
-    //   }
-    // })
 
     // Create Transporter
     const transporter = nodemailer.createTransport({
@@ -105,10 +81,10 @@ class MailService {
     // Send Email
     emailTransporter.sendMail(mailOptions, (err, res) => {
       if (err) {
-        console.log(err)
+        logger.error(err)
         return false
       } else {
-        console.log(res)
+        logger.warn(res)
       }
     })
     return true

@@ -1,4 +1,5 @@
 // Config environment
+const { logger } = require('./utils/logger')
 require('dotenv').config()
 
 // Wait for RabbitMQ to start before starting the consumer, set timeout for 30 seconds
@@ -15,4 +16,4 @@ setTimeout(() => {
   consumer.consumeMessage()
 }, 30000)
 
-console.log('Waiting for RabbitMQ to start...')
+logger.info('Waiting for RabbitMQ to start...')

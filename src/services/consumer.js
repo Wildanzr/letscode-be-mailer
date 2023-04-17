@@ -1,5 +1,6 @@
 const amqp = require('amqplib')
 const { ClientError } = require('../errors')
+const { logger } = require('../utils/logger')
 
 class Consumer {
   constructor (mailService) {
@@ -12,7 +13,7 @@ class Consumer {
   }
 
   async consumeMessage () {
-    console.log('Consumer listening for messages...')
+    logger.info('Consumer listening for messages...')
     try {
       // Create a connection to the RabbitMQ server
       const host = process.env.RABBITMQ_HOST || 'localhost'
@@ -28,12 +29,11 @@ class Consumer {
 
       // Consume message from the mail queue
       this._channel.consume('mail', async (data) => {
-        console.log('receive new message')
+        logger.info('receive new message')
 
         // Parse the message then destructuring the data
         const payload = await JSON.parse(data.content.toString())
         const { message, subject, template } = payload
-        // console.log(payload)
 
         // Send email to the user
         await this._mailService.sendEmail(message, subject, template)
@@ -41,7 +41,7 @@ class Consumer {
         this._channel.ack(data)
       })
     } catch (error) {
-      console.log(error)
+      logger.error(error)
       const message = error.message || 'Internal Server Error'
       const statusCode = error.statusCode || 500
       throw new ClientError(message, statusCode)
@@ -50,7 +50,7 @@ class Consumer {
 
   async output (message) {
     return new Promise(resolve => setTimeout(() => {
-      console.log(message)
+      logger.info(message)
       resolve(message)
     }, 10000))
   }
