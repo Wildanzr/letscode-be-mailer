@@ -16,12 +16,12 @@ class Consumer {
     logger.info('Consumer listening for messages...')
     try {
       // Create a connection to the RabbitMQ server
-      const host = process.env.RABBITMQ_HOST || 'localhost'
-      const port = process.env.RABBITMQ_PORT || 5672
-      const user = process.env.RABBITMQ_USERNAME || 'guest'
-      const password = process.env.RABBITMQ_PASSWORD || 'guest'
+      const HOST = process.env.RABBITMQ_HOST || 'localhost'
+      const PORT = process.env.RABBITMQ_PORT || 5672
+      const USER = process.env.RABBITMQ_USERNAME || 'guest'
+      const PASSWORD = process.env.RABBITMQ_PASSWORD || 'guest'
 
-      this._connection = await amqp.connect(`amqp://${user}:${password}@${host}:${port}`)
+      this._connection = await amqp.connect(`amqp://${USER}:${PASSWORD}@${HOST}:${PORT}`)
       this._channel = await this._connection.createChannel()
 
       // Register a consumer for the queue, or create the queue if it doesn't exist
